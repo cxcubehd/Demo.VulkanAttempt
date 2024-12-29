@@ -1,0 +1,4 @@
+# C++ files
+[*.{c,cpp,cxx,cc,h,hpp,hxx,hh}]
+indent_style = space
+indent_size = 2

@@ -1,0 +1,10 @@
+Language: Cpp
+BasedOnStyle: Google
+IncludeBlocks: Preserve
+InsertNewlineAtEOF: true
+PointerAlignment: Left
+CompactNamespaces: false
+NamespaceIndentation: All
+BreakBeforeBraces: Allman
+AlignAfterOpenBracket: AlwaysBreak
+ContinuationIndentWidth: 2

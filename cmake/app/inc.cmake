@@ -1,0 +1,1 @@
+target_include_directories(app PUBLIC "${PROJECT_SOURCE_DIR}/src")

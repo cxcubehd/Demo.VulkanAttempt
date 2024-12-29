@@ -1,0 +1,9 @@
+{
+  "dependencies" : [ {
+    "name" : "joltphysics",
+    "version>=" : "5.2.0"
+  }, {
+    "name" : "glm",
+    "version>=" : "1.0.1#3"
+  } ]
+}
