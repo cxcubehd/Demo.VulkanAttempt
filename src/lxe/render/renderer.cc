@@ -1,4 +1,5 @@
 #include <stdexcept>
+#include <print>
 
 #include <SDL3/SDL_vulkan.h>
 
@@ -17,9 +18,7 @@ namespace lxe
 
     Impl_Init();
 
-    Impl_Render();
-
-    return;
+    std::println("maybe maybe ;)");
   }
 
   auto Renderer::GetSdlVkInstanceExtensions()

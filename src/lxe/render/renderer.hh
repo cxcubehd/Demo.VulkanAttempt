@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <span>
 #include <tuple>
 #include <vector>
 
@@ -86,9 +87,10 @@ namespace lxe
     auto Impl_InitFramebuffers() -> void;
     auto Impl_InitCommandPool() -> void;
     auto Impl_InitCommandBuffers() -> void;
-    auto Impl_InitSemaphores() -> void;
+    auto Impl_InitSync() -> void;
 
-    auto Impl_CreateShaderModule() -> vk::ShaderModule { return {}; }
+    auto Impl_CreateShaderModule(std::span<const char> data) const
+      -> vk::ShaderModule;
 
     auto Impl_RecordCommandBuffers() -> void;
     auto Impl_Render() -> void;

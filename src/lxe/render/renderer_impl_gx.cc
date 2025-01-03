@@ -3,6 +3,8 @@
 
 #include <vulkan/vulkan.hpp>
 
+#include <lxe_assets/shaders.hh>
+
 #include "renderer.hh"
 
 namespace lxe
@@ -61,9 +63,8 @@ namespace lxe
     // vertex
     // fragment
 
-    const auto shaderModuleVertex = Impl_CreateShaderModule(/* TODO */);
-    const auto shaderModuleFragment = Impl_CreateShaderModule(/* TODO */);
-    // TODO: error checking
+    const auto shaderModuleVertex = Impl_CreateShaderModule(assets::Asset_Shader_Vertex_Spv());
+    const auto shaderModuleFragment = Impl_CreateShaderModule(assets::Asset_Shader_Fragment_Spv());
 
     const auto shaderStageVertex = vk::PipelineShaderStageCreateInfo{
       .stage = vk::ShaderStageFlagBits::eVertex,

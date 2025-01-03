@@ -44,8 +44,14 @@ namespace lxe
     // Create command pool
     Impl_InitCommandPool();
 
+    // Create command buffers
+    Impl_InitCommandBuffers();
+
     // Record command buffers
     Impl_RecordCommandBuffers();
+
+    // Init sync objects
+    Impl_InitSync();
   }
 
   auto Renderer::Impl_InitInstance() -> void
@@ -233,7 +239,7 @@ namespace lxe
     VkCommandBuffers_ = VkDevice_.allocateCommandBuffers(allocInfo);
   }
 
-  auto Renderer::Impl_InitSemaphores() -> void
+  auto Renderer::Impl_InitSync() -> void
   {
     VkImageAvailableSemaphores_ = {};
     VkRenderFinishedSemaphores_ = {};
@@ -258,21 +264,27 @@ namespace lxe
     }
   }
 
+  auto Renderer::Impl_CreateShaderModule(std::span<const char> data) const
+    -> vk::ShaderModule
+  {
+    const auto createInfo = vk::ShaderModuleCreateInfo{
+      .codeSize = data.size(),
+      .pCode = reinterpret_cast<const std::uint32_t*>(data.data())
+    };
+
+    return VkDevice_.createShaderModule(createInfo);
+  }
+
   auto Renderer::Impl_RecordCommandBuffers() -> void
   {
     for (const auto i : std::views::iota(0u, VkFramebufferCount_))
     {
       const auto& commandBuffer = VkCommandBuffers_[i];
 
-      if (commandBuffer.begin({}) != vk::Result::eSuccess)
-        throw std::runtime_error(
-          std::format(
-            "(Renderer) Failed to begin recording command buffer {}", i
-          )
-        );
+      commandBuffer.begin(vk::CommandBufferBeginInfo{});
 
       constexpr auto clearValue = vk::ClearValue{
-        .color = vk::ClearColorValue({{0.0f, 0.0f, 0.0f, 1.0f}})
+        .color = vk::ClearColorValue({{0.0f, 0.0f, 1.0f, 1.0f}})
       };
 
       const auto renderPassBeginInfo = vk::RenderPassBeginInfo{
