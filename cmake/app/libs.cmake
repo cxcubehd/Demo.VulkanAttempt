@@ -1,6 +1,8 @@
+# battery embed
+CPMAddPackage("gh:batterycenter/embed@1.2.19")
+
+
 # glm
-#CPMAddPackage("gh:g-truc/glm#1.0.1")
-#target_link_libraries(app PUBLIC glm::glm)
 find_package(glm CONFIG REQUIRED)
 target_link_libraries(app PUBLIC glm::glm)
 

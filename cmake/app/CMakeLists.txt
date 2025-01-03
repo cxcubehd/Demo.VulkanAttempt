@@ -10,3 +10,6 @@ include(inc.cmake)
 
 # Dependencies
 include(libs.cmake)
+
+# Assets
+include(assets.cmake)
