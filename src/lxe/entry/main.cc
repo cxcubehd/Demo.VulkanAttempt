@@ -24,9 +24,8 @@ auto main() -> int
   }
   catch (const std::exception& e)
   {
-    std::println(
-      std::cerr, "Application has thrown the following exception:\n\t",
-      e.what());
+    std::println(std::cerr,
+      "Application has thrown the following exception:\n\t", e.what());
     std::exit(1);
   }
 
@@ -49,8 +48,7 @@ auto main_2() -> int
     throw std::runtime_error("Failed to load Vulkan");
 
   // create window
-  ctx.s_window = SDL_CreateWindow(
-    "app demo", 1422, 800,
+  ctx.s_window = SDL_CreateWindow("app demo", 1422, 800,
     SDL_WINDOW_VULKAN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIDDEN);
   if (!ctx.s_window) throw std::runtime_error("Failed to create window");
 
@@ -64,8 +62,7 @@ auto main_2() -> int
   auto graphics_queue_ret = ctx.vb_device.get_queue(vkb::QueueType::graphics);
   if (!graphics_queue_ret)
   {
-    std::println(
-      std::cerr, "Failed to get graphics queue. Error: {}",
+    std::println(std::cerr, "Failed to get graphics queue. Error: {}",
       graphics_queue_ret.error().message());
     return false;
   }

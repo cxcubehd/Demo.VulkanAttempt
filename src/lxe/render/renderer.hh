@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <tuple>
+#include <vector>
 
 #include <VkBootstrap.h>
 #include <vulkan/vulkan.hpp>
@@ -32,19 +33,65 @@ namespace lxe
 
    private:
     vkb::Instance VbInstance_;
+    vk::Instance VkInstance_;
 
     vk::SurfaceKHR VkSurface_;
 
     vkb::PhysicalDevice VbPhysicalDevice_;
     vkb::Device VbDevice_;
     vk::Device VkDevice_;
+    vkb::DispatchTable VbDispatchTable_;
+
+    vkb::Swapchain VbSwapchain_;
+    vk::SwapchainKHR VkSwapchain_;
+
+    vk::Queue VkGraphicsQueue_;
+    vk::Queue VkPresentQueue_;
+
+    vk::RenderPass VkRenderPass_;
+
+    vk::PipelineLayout VkPipelineLayout_;
+    vk::Pipeline VkPipeline_;
+
+    std::vector<vk::Image> VkSwapchainImages_;
+    std::vector<vk::ImageView> VkSwapchainImageViews_;
+
+    std::size_t VkFramebufferCount_{};
+    std::vector<vk::Framebuffer> VkFramebuffers_;
+
+    vk::CommandPool VkCommandPool_;
+    std::vector<vk::CommandBuffer> VkCommandBuffers_;
+
+    std::vector<vk::Semaphore> VkImageAvailableSemaphores_;
+    std::vector<vk::Semaphore> VkRenderFinishedSemaphores_;
+    std::vector<vk::Fence> VkInFlightFences_;
+    std::vector<vk::Fence> VkInFlightImages_;
+
+    std::size_t VkCurrentFrame_{};
+
+    static constexpr std::size_t VkMaxFramesInFlight_ = 2;
 
    private:
     auto Impl_Init() -> void;
-    auto Impl_CreateInstance() -> void;
-    auto Impl_CreateSurface() -> void;
-    auto Impl_SelectPhysicalDevice() -> void;
-    auto Impl_GetDevice() -> void;
+
+    auto Impl_InitInstance() -> void;
+    auto Impl_InitSurface() -> void;
+    auto Impl_InitDevice() -> void;
+    auto Impl_InitSwapchain() -> void;
+    auto Impl_InitGetQueues() -> void;
+
+    auto Impl_InitRenderPass() -> void;
+    auto Impl_InitGraphicsPipeline() -> void;
+
+    auto Impl_InitFramebuffers() -> void;
+    auto Impl_InitCommandPool() -> void;
+    auto Impl_InitCommandBuffers() -> void;
+    auto Impl_InitSemaphores() -> void;
+
+    auto Impl_CreateShaderModule() -> vk::ShaderModule { return {}; }
+
+    auto Impl_RecordCommandBuffers() -> void;
+    auto Impl_Render() -> void;
 
    public:
     auto Init() -> void;

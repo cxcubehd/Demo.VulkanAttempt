@@ -2,8 +2,9 @@
 
 #include <SDL3/SDL_vulkan.h>
 
+#include <lxe/render/renderer.hh>
+
 #include "app.hh"
-#include "lxe/render/renderer.hh"
 
 namespace lxe
 {
@@ -26,7 +27,8 @@ namespace lxe
     // Create window
     SdlWindow_ = SDL_CreateWindow(
       "app demo", 1422, 800,
-      SDL_WINDOW_VULKAN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIDDEN);
+      SDL_WINDOW_VULKAN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIDDEN
+    );
     if (!SdlWindow_) throw std::runtime_error("Failed to create window");
 
     // Set min window size

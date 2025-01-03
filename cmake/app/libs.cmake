@@ -23,7 +23,9 @@ CPMAddPackage(
         OPTIONS
         "VULKAN_HPP_NO_CONSTRUCTORS OFF"
         "VULKAN_HPP_ENABLE_CPP20_MODULES ON"
+        "VULKAN_HPP_CPP20_MODULE_DYNAMIC_DISPATCHER ON"
 )
+target_compile_definitions(VulkanHppModule PUBLIC VULKAN_HPP_NO_CONSTRUCTORS)
 target_link_libraries(app PUBLIC VulkanHppModule)
 
 # vk-bootstrap
@@ -34,3 +36,7 @@ message("Headers: ${VK_BOOTSTRAP_VULKAN_HEADER_DIR}")
 
 CPMAddPackage("gh:charles-lunarg/vk-bootstrap#2e7c8e8323c0fe7efc96dc241610fcba35d8f530")
 target_link_libraries(app PUBLIC vk-bootstrap::vk-bootstrap)
+
+# VulkanMemoryAllocator
+CPMAddPackage("gh:GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator#3bab6924988e5f19bf36586a496156cf72f70d9f")
+#target_link_libraries(app PUBLIC GPUOpen::VulkanMemoryAllocator)

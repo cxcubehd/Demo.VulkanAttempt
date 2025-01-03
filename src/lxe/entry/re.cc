@@ -27,8 +27,7 @@ namespace re
                       .build();
     if (!inst_ret)
     {
-      std::println(
-        std::cerr, "Failed to create Vulkan instance. Error: {}",
+      std::println(std::cerr, "Failed to create Vulkan instance. Error: {}",
         inst_ret.error().message());
       throw std::exception();
     }
@@ -53,8 +52,8 @@ namespace re
                       .select();
     if (!phys_ret)
     {
-      std::println(
-        std::cerr, "Failed to select Vulkan Physical Device. Error: {}",
+      std::println(std::cerr,
+        "Failed to select Vulkan Physical Device. Error: {}",
         phys_ret.error().message());
       throw std::exception();
     }
@@ -65,8 +64,7 @@ namespace re
     auto dev_ret = device_builder.build();
     if (!dev_ret)
     {
-      std::println(
-        std::cerr, "Failed to create Vulkan device. Error: {}",
+      std::println(std::cerr, "Failed to create Vulkan device. Error: {}",
         dev_ret.error().message());
       throw std::exception();
     }
