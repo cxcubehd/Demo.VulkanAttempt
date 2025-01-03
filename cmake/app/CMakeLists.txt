@@ -1,4 +1,5 @@
-add_executable(app)
+add_executable(app
+        ../../src/lxe_assets/macro_begin.hh)
 
 set_target_properties(app PROPERTIES OUTPUT_NAME lxe)
 

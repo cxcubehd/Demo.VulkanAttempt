@@ -1,0 +1,3 @@
+#undef LXE_ASSETS_DATA
+
+#undef LXE_ASSETS_DATA_IMPL
