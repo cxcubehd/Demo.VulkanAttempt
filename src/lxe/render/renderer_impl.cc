@@ -12,13 +12,13 @@ namespace lxe
 {
   auto Renderer::Impl_Init() -> void
   {
-    // Create instance
-    Impl_InitInstance();
-
     // Init VulkanHpp
     {
-      VULKAN_HPP_DEFAULT_DISPATCHER.init(VkInstance_);
+      VULKAN_HPP_DEFAULT_DISPATCHER.init();
     }
+
+    // Create instance
+    Impl_InitInstance();
 
     // Create surface
     Impl_InitSurface();
@@ -55,7 +55,7 @@ namespace lxe
     vkb::InstanceBuilder builder;
     const auto instanceRes =
       builder.set_app_name("lxe")
-        .enable_validation_layers()
+        .request_validation_layers()
         .use_default_debug_messenger()
         .enable_extensions(std::get<1>(instanceExt), std::get<0>(instanceExt))
         .build();
@@ -70,6 +70,9 @@ namespace lxe
 
     VbInstance_ = instanceRes.value();
     VkInstance_ = VbInstance_.instance;
+
+    // Init VulkanHpp
+    VULKAN_HPP_DEFAULT_DISPATCHER.init(VkInstance_);
   }
 
   auto Renderer::Impl_InitSurface() -> void
@@ -120,6 +123,9 @@ namespace lxe
       VbDevice_ = deviceRes.value();
       VkDevice_ = VbDevice_.device;
     }
+
+    // Init VulkanHpp
+    VULKAN_HPP_DEFAULT_DISPATCHER.init(VkDevice_);
 
     // Get dispatch table
     VbDispatchTable_ = VbDevice_.make_table();
@@ -241,9 +247,8 @@ namespace lxe
 
     constexpr auto semaphoreInfo = vk::SemaphoreCreateInfo{};
 
-    constexpr auto fenceInfo = vk::FenceCreateInfo{
-      .flags = vk::FenceCreateFlagBits::eSignaled
-    };
+    constexpr auto fenceInfo =
+      vk::FenceCreateInfo{.flags = vk::FenceCreateFlagBits::eSignaled};
 
     for (const auto i : std::views::iota(0u, VkMaxFramesInFlight_))
     {
@@ -299,7 +304,9 @@ namespace lxe
       commandBuffer.setViewport(0, 1, &viewport);
       commandBuffer.setScissor(0, 1, &scissors);
 
-      commandBuffer.beginRenderPass(renderPassBeginInfo, vk::SubpassContents::eInline);
+      commandBuffer.beginRenderPass(
+        renderPassBeginInfo, vk::SubpassContents::eInline
+      );
 
       commandBuffer.bindPipeline(vk::PipelineBindPoint::eGraphics, VkPipeline_);
 

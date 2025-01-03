@@ -16,6 +16,10 @@ namespace lxe
     // TODO: Check if init
 
     Impl_Init();
+
+    Impl_Render();
+
+    return;
   }
 
   auto Renderer::GetSdlVkInstanceExtensions()

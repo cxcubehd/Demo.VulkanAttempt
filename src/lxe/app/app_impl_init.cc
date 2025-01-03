@@ -20,6 +20,8 @@ namespace lxe
 
     // Create window
     Impl_CreateWindow();
+
+    Renderer_->Init();
   }
 
   auto App::Impl_CreateWindow() -> void

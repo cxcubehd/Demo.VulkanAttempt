@@ -25,7 +25,7 @@ auto main() -> int
   catch (const std::exception& e)
   {
     std::println(std::cerr,
-      "Application has thrown the following exception:\n\t", e.what());
+      "Application has thrown the following exception:\n\t{}", e.what());
     std::exit(1);
   }
 
