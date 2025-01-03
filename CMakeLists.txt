@@ -11,3 +11,7 @@ project(lxe LANGUAGES CXX)
 
 # Configuration
 add_subdirectory(cmake)
+
+
+message(STATUS "C++ Compiler: ${CMAKE_CXX_COMPILER}")
+message(STATUS "C Compiler: ${CMAKE_C_COMPILER}")

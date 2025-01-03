@@ -6,5 +6,9 @@ PointerAlignment: Left
 CompactNamespaces: false
 NamespaceIndentation: All
 BreakBeforeBraces: Allman
-AlignAfterOpenBracket: AlwaysBreak
+AlignAfterOpenBracket: BlockIndent
 ContinuationIndentWidth: 2
+MaxEmptyLinesToKeep: 2
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+AlignOperands: DontAlign
+AlignEscapedNewlines: DontAlign
