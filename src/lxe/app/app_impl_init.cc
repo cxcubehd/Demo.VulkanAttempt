@@ -1,3 +1,4 @@
+#include <print>
 #include <stdexcept>
 #include <thread>
 
@@ -28,16 +29,48 @@ namespace lxe
 
     Renderer_->Impl_Render();
 
+    // Sdl resize callback
+    SDL_AddEventWatch(
+      [](void* userdata, SDL_Event* event) -> bool
+      {
+        const auto app = static_cast<App*>(userdata);
+        if (event->type == SDL_EVENT_WINDOW_RESIZED)
+        {
+          // resizing
+          app->Renderer_->Impl_RecreateSwapchain();
+          app->Renderer_->Impl_Render();
+        }
+        return true;
+      },
+      this
+    );
+
     while (true)
     {
-      //std::this_thread::sleep_for(std::chrono::seconds(1));
-      // handle sdl events
+      // std::this_thread::sleep_for(std::chrono::seconds(1));
+      //  handle sdl events
       SDL_Event e;
       while (SDL_PollEvent(&e))
       {
         if (e.type == SDL_EVENT_QUIT) return;
+        // handle f11 fullscreen
+        if (e.type == SDL_EVENT_KEY_DOWN && e.key.key == SDLK_F11)
+        {
+          // store global mouse pos
+          auto [x, y] = std::tuple<float, float>();
+          SDL_GetGlobalMouseState(&x, &y);
+
+          if (const auto flags = SDL_GetWindowFlags(SdlWindow_);
+              flags & SDL_WINDOW_FULLSCREEN)
+            SDL_SetWindowFullscreen(SdlWindow_, false);
+          else SDL_SetWindowFullscreen(SdlWindow_, SDL_WINDOW_FULLSCREEN);
+
+          // restore global mouse pos
+          SDL_WarpMouseGlobal(x, y);
+        }
       }
       Renderer_->Impl_Render();
+      Renderer_->Impl_MaybeResize();
     }
   }
 
@@ -46,8 +79,7 @@ namespace lxe
     // Create window
     SdlWindow_ = SDL_CreateWindow(
       "lxe demo", 1422, 800,
-      SDL_WINDOW_VULKAN | SDL_WINDOW_HIDDEN
-      //| SDL_WINDOW_RESIZABLE
+      SDL_WINDOW_VULKAN | SDL_WINDOW_HIDDEN | SDL_WINDOW_RESIZABLE
     );
     if (!SdlWindow_) throw std::runtime_error("Failed to create window");
 

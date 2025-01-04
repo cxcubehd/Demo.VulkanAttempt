@@ -184,18 +184,18 @@ namespace lxe
       .basePipelineIndex = {}
     };
 
-    const auto pipelineResult =
+    const auto pipelineRes =
       VkDevice_.createGraphicsPipeline(nullptr, pipeline);
 
-    if (pipelineResult.result != vk::Result::eSuccess)
+    if (pipelineRes.result != vk::Result::eSuccess)
       throw std::runtime_error(
         std::format(
           "(Renderer) Failed to create graphics pipeline: {}",
-          static_cast<int>(pipelineResult.result)
+          static_cast<int>(pipelineRes.result)
         )
       );
 
-    VkPipeline_ = pipelineResult.value;
+    VkPipeline_ = pipelineRes.value;
 
     // TODO: Destroy shader module
   }

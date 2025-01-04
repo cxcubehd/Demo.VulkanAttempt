@@ -61,6 +61,7 @@ namespace lxe
     vkb::InstanceBuilder builder;
     const auto instanceRes =
       builder.set_app_name("lxe")
+        .require_api_version(1, 2, 0)
         .request_validation_layers()
         .use_default_debug_messenger()
         .enable_extensions(std::get<1>(instanceExt), std::get<0>(instanceExt))
@@ -139,7 +140,10 @@ namespace lxe
 
   auto Renderer::Impl_InitSwapchain() -> void
   {
-    const auto swapchainBuilder = vkb::SwapchainBuilder(VbDevice_);
+    const auto swapchainBuilder =
+      vkb::SwapchainBuilder(VbDevice_).set_desired_present_mode(
+        VK_PRESENT_MODE_FIFO_KHR
+      );
     auto swapchainRes = swapchainBuilder.build();
 
     if (!swapchainRes)
@@ -322,11 +326,48 @@ namespace lxe
 
       commandBuffer.bindPipeline(vk::PipelineBindPoint::eGraphics, VkPipeline_);
 
-      commandBuffer.draw(3, 1, 0, 0);
+      commandBuffer.draw(6, 1, 0, 0);
 
       commandBuffer.endRenderPass();
 
       commandBuffer.end();
     }
+  }
+
+  auto Renderer::Impl_RecreateSwapchain() -> void
+  {
+    VkDevice_.waitIdle();
+
+    VkDevice_.destroyCommandPool(VkCommandPool_);
+    VkCommandPool_ = nullptr;
+
+    for (const auto& framebuffer : VkFramebuffers_)
+    {
+      VkDevice_.destroyFramebuffer(framebuffer);
+    }
+    VkFramebuffers_ = {};
+
+    for (const auto& imageView : VkSwapchainImageViews_)
+    {
+      VkDevice_.destroyImageView(imageView);
+    }
+    VkSwapchainImageViews_ = {};
+
+    VkDevice_.destroySwapchainKHR(VkSwapchain_);
+    VkSwapchain_ = nullptr;
+
+    Impl_InitSwapchain();
+    Impl_InitFramebuffers();
+    Impl_InitCommandPool();
+    Impl_InitCommandBuffers();
+    Impl_RecordCommandBuffers();
+  }
+
+  auto Renderer::Impl_MaybeResize() -> void
+  {
+    if (!VkShouldResize_) return;
+    VkShouldResize_ = false;
+
+    Impl_RecreateSwapchain();
   }
 }  // namespace lxe

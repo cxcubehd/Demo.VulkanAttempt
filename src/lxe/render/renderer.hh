@@ -72,6 +72,8 @@ namespace lxe
 
     static constexpr std::size_t VkMaxFramesInFlight_ = 2;
 
+    bool VkShouldResize_{};
+
    private:
     auto Impl_Init() -> void;
 
@@ -89,11 +91,16 @@ namespace lxe
     auto Impl_InitCommandBuffers() -> void;
     auto Impl_InitSync() -> void;
 
-    auto Impl_CreateShaderModule(std::span<const char> data) const
+    [[nodiscard]] auto Impl_CreateShaderModule(std::span<const char> data) const
       -> vk::ShaderModule;
 
     auto Impl_RecordCommandBuffers() -> void;
+
     auto Impl_Render() -> void;
+
+    auto Impl_MaybeResize() -> void;
+
+    auto Impl_RecreateSwapchain() -> void;
 
    public:
     auto Init() -> void;

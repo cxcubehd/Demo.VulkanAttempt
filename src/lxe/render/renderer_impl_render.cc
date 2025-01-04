@@ -9,7 +9,7 @@ namespace lxe
 {
   auto Renderer::Impl_Render() -> void
   {
-    const auto i = VkCurrentFrame_;  // TODO: get current frame index
+    const auto i = VkCurrentFrame_;
 
     if (VkDevice_.waitForFences(
           1, &VkInFlightFences_[i], true,
@@ -22,22 +22,25 @@ namespace lxe
         )
       );
 
-    std::uint32_t imageIndex;
+    std::uint32_t imageIndex{};
 
-    const auto imageAcquireResult = VkDevice_.acquireNextImageKHR(
+    const auto imageAcquireRes = VkDevice_.acquireNextImageKHR(
       VkSwapchain_, std::numeric_limits<std::uint64_t>::max(),
       VkImageAvailableSemaphores_[i], nullptr, &imageIndex
     );
 
-    if (imageAcquireResult == vk::Result::eErrorOutOfDateKHR)
-      throw std::runtime_error("(Renderer) TODO: recreate swap chain");
+    if (imageAcquireRes == vk::Result::eErrorOutOfDateKHR)
+    {
+      VkShouldResize_ = true;
+      return;
+    }
 
-    if (imageAcquireResult != vk::Result::eSuccess &&
-        imageAcquireResult != vk::Result::eSuboptimalKHR)
+    if (imageAcquireRes != vk::Result::eSuccess &&
+        imageAcquireRes != vk::Result::eSuboptimalKHR)
       throw std::runtime_error(
         std::format(
           "(Renderer) Failed to acquire next image: {}",
-          static_cast<int>(imageAcquireResult)
+          static_cast<int>(imageAcquireRes)
         )
       );
 
@@ -51,7 +54,7 @@ namespace lxe
           "(Renderer) Failed to wait for in-flight image"
         );
     }
-    else VkInFlightImages_[imageIndex] = VkInFlightFences_[i];
+    VkInFlightImages_[imageIndex] = VkInFlightFences_[i];
 
     const auto waitSemaphores = std::to_array({VkImageAvailableSemaphores_[i]});
     const auto waitStages = std::to_array<vk::PipelineStageFlags>(
@@ -83,17 +86,20 @@ namespace lxe
       .pImageIndices = &imageIndex
     };
 
-    const auto presentResult = VkPresentQueue_.presentKHR(presentInfo);
+    const auto presentRes = VkPresentQueue_.presentKHR(presentInfo);
 
-    if (presentResult == vk::Result::eErrorOutOfDateKHR ||
-        presentResult == vk::Result::eSuboptimalKHR)
-      throw std::runtime_error("(Renderer) TODO: recreate swap chain");
+    if (presentRes == vk::Result::eErrorOutOfDateKHR ||
+        presentRes == vk::Result::eSuboptimalKHR)
+    {
+      VkShouldResize_ = true;
+      return;
+    }
 
-    if (presentResult != vk::Result::eSuccess)
+    if (presentRes != vk::Result::eSuccess)
       throw std::runtime_error(
         std::format(
           "(Renderer) Failed to present image: {}",
-          static_cast<int>(presentResult)
+          static_cast<int>(presentRes)
         )
       );
 
