@@ -37,6 +37,7 @@ CPMAddPackage(
         OPTIONS
         "SDL_TEST_LIBRARY OFF"
         "SDL_STATIC ON"
+        "SDL_X11_XSCRNSAVER OFF"
 )
 target_link_libraries(app PUBLIC SDL3::SDL3-static)
 
