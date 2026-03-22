@@ -48,11 +48,10 @@ CPMAddPackage(
         GIT_TAG v1.4.346
         GIT_SHALLOW
         OPTIONS
-        "VULKAN_HPP_NO_CONSTRUCTORS OFF"
+        "VULKAN_HPP_NO_CONSTRUCTORS ON"
         "VULKAN_HPP_ENABLE_CPP20_MODULES ON"
         "VULKAN_HPP_CPP20_MODULE_DYNAMIC_DISPATCHER ON"
 )
-target_compile_definitions(VulkanHppModule PUBLIC VULKAN_HPP_NO_CONSTRUCTORS)
 target_link_libraries(app PUBLIC VulkanHppModule)
 
 # vk-bootstrap
